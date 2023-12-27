@@ -1,8 +1,9 @@
 <style lang="scss" scoped>
+	@use '@/assets/styles/theme' as T;
+
 	#loginView {
 		width: 100vw;
 		height: 100vh;
-		background-image: url('@/assets/images/login/background.png');
 		background-size: 100% 100%;
 		background-repeat: no-repeat;
 		.box {
@@ -13,7 +14,6 @@
 			height: 668px;
 			top: 242px;
 			left: 106px;
-			background-image: url('@/assets/images/login/logo.png');
 			background-size: contain;
 			background-repeat: no-repeat;
 		}
@@ -23,6 +23,16 @@
 			top: 263px;
 			right: 247px;
 		}
+		@include T.themeify {
+			background-image: url(
+				'@/assets/images/#{T.get(id)}/login/background.png'
+			);
+			#left {
+				background-image: url(
+					'@/assets/images/#{T.get(id)}/login/logo.png'
+				);
+			}
+		};
 	}
 </style>
 

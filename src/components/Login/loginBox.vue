@@ -1,10 +1,48 @@
 <style lang="scss" scoped>
+	@use '@/assets/styles/theme' as T;
+
 	#loginBox {
+		@include T.themeify {
+			border: 1px solid #{T.get(login-box-border-color)};
+			background: T.get(login-box-bg-color);
+			#logo {
+				background-image: url('@/assets/images/#{T.get(id)}/login/loginBox/logo.png');
+			}
+			#input {
+				#accout, #passwd {
+					:deep(.el-input){
+						--el-input-hover-border-color: #{T.get(login-box-input-hover-color)};
+						--el-input-focus-border-color: #{T.get(login-box-input-hover-color)};
+						.el-input__wrapper{
+							background: T.get(login-box-input-bg-color);
+							border: 1px solid #{T.get(login-box-input-border-color)};
+						}
+					}
+				}
+				#extions {
+					#left {
+						:deep(.el-checkbox){
+							--el-checkbox-checked-bg-color: #{T.get(login-box-input-checkbox-bg-color)};
+						}
+					}
+					#right {
+						:deep(.el-link) {
+							#forgetPasswdTitle {
+								color: T.get(login-box-input-link-color)
+							}
+						}
+					}
+				}
+			}
+			#login {
+				:deep(.el-button) {
+					background-image: T.get(login-box-button-color);
+				}
+			}
+		}
+
 		width: 100%;
 		height: 100%;
-		background: rgba(5,50,42,0.23);
-		border: 1px solid #1FCF97;
-		opacity: 0.71;
 		border-radius: 10px;
 		padding: 54px 0 76px 0;
 		flex-flow: column nowrap;
@@ -13,7 +51,6 @@
 		#logo {
 			width: 430px;
 			height: 47px;
-			background-image: url('@/assets/images/login/loginBox/logo.png');
 			background-size: contain;
 			background-repeat: no-repeat;
 		}
@@ -41,11 +78,7 @@
 				}
 				:deep(.el-input){
 					flex: 1;
-					--el-input-hover-border-color: #1FCF97;
-					--el-input-focus-border-color: #1FCF97;
 					.el-input__wrapper{
-						background: rgba(5,50,42,0.66);
-						border: 1px solid #1FCF97;
 						border-radius: 6px;
 						box-shadow: none;
 					}
@@ -64,7 +97,6 @@
 				}
 				#left {
 					:deep(.el-checkbox){
-						--el-checkbox-checked-bg-color: #00C687;
 						height: 100%;
 						#savePasswdTitle {
 							font-size: 14px;
@@ -72,7 +104,6 @@
 							font-weight: 400;
 							color: #B6B6B6;
 						}
-
 					}
 				}
 				#right {
@@ -81,7 +112,6 @@
 						#forgetPasswdTitle {
 							font-size: 14px;
 							font-family: Alibaba PuHuiTi;
-							color: #00FFAE;
 						}
 
 					}
@@ -94,7 +124,6 @@
 			:deep(.el-button) {
 				width: 100%;
 				height: 100%;
-				background-image: linear-gradient(90deg, #109967 0%, #16DD9E 100%);
 				border-radius: 6px;
 				border: 0;
 				#loginTitle {

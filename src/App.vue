@@ -12,5 +12,13 @@
 </template>
 
 <script setup lang="ts">
+	import {
+		onMounted
+	} from 'vue';
 
+	onMounted(() => {
+		const elRoot = document.documentElement;
+
+		elRoot.setAttribute('data-theme', 'green');
+	});
 </script>

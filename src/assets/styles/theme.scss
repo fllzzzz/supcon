@@ -2,10 +2,26 @@
 
 $_source-map: (
 	green: (
-		id: 'green'
+		id: 'green',
+		login-box-border-color: #1FCF97,
+		login-box-bg-color: rgba(5, 50, 42, 0.71),
+		login-box-input-hover-color: #1FCF97,
+		login-box-input-bg-color: rgba(5,50,42,0.66),
+		login-box-input-border-color: #1FCF97,
+		login-box-input-checkbox-bg-color: #00C687,
+		login-box-input-link-color:#00FFAE,
+		login-box-button-color: linear-gradient(90deg, #109967 0%, #16DD9E 100%),
 	),
 	yellow: (
-		id: 'yellow'
+		id: 'yellow',
+		login-box-border-color: #BDAC8C,
+		login-box-bg-color: rgba(35, 31, 3, 0.71),
+		login-box-input-hover-color: #BDAC8C,
+		login-box-input-bg-color:rgba(30,24,11,0.66),
+		login-box-input-border-color: #BDAC8C,
+		login-box-input-checkbox-bg-color: #B69434,
+		login-box-input-link-color: #FFDB7A,
+		login-box-button-color: linear-gradient(90deg, #D0A630 0%, #FFD768 100%),
 	)
 );
 

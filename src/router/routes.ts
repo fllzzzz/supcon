@@ -15,7 +15,7 @@ export default [
 			KeepAlive: false,
 		}
 	},
-	{
+/* 	{
 		path: '/info',
 		name: 'info',
 		component: () => import('@/views/Info/index.vue'),
@@ -64,5 +64,5 @@ export default [
 				},
 			}
 		]
-	},
+	}, */
 ];
