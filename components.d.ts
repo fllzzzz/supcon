@@ -8,10 +8,17 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     DeviceBox: typeof import('./src/components/Info/deviceBox.vue')['default']
+    ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
+    ElContainer: typeof import('element-plus/es')['ElContainer']
+    ElHeader: typeof import('element-plus/es')['ElHeader']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElLink: typeof import('element-plus/es')['ElLink']
+    ElMain: typeof import('element-plus/es')['ElMain']
+    ElMenu: typeof import('element-plus/es')['ElMenu']
+    ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
+    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ForsetAndCity: typeof import('./src/components/ForsetAndCity.vue')['default']
     LoginBox: typeof import('./src/components/Login/loginBox.vue')['default']
     PlantDelegate: typeof import('./src/components/PlantDelegate.vue')['default']

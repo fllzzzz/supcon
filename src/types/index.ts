@@ -1,3 +1,23 @@
+type MetaData = {
+	host :string;
+};
+
+type ItemOptions = {
+	name :string;
+	metadata :MetaData;
+};
+
+export type AppOptions = {
+	theme :'green' | 'yellow';
+	itemOptions :ItemOptions[];
+}; 
+
+
+
+
+
+
+
 export type Result<T = any> = {
 	code :number;
 	message :string;

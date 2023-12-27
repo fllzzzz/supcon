@@ -1,8 +1,36 @@
 <style lang="scss" scoped>
+	@use '@/assets/styles/theme' as T;
+
 	#infoView {
+		@include T.themeify {
+			background-image: url('@/assets/images/#{T.get(id)}/info/background.png');
+
+			#top {
+				background-image: url('@/assets/images/#{T.get(id)}/logo.png');
+			}
+			
+			#middle {
+				#left {
+					width: T.get(device-info-middle-left-width);
+					height: T.get(device-info-middle-left-height);
+					background-image: url('@/assets/images/#{T.get(id)}/info/logo.png');
+				}
+			}
+
+			#footer {
+				#left {
+					background: T.get(device-info-footer-left-bg-color);
+				}
+				#right {
+					:deep(.el-button){
+						background-image: T.get(device-info-footer-right-bg-color);
+					}
+				}
+			}
+		}
+
 		width: 100vw;
 		height: 100vh;
-		background-image: url('@/assets/images/info/background.png');
 		background-size: 100% 100%;
 		background-repeat: no-repeat;
 		flex-flow: column nowrap;
@@ -10,10 +38,9 @@
 		align-items: flex-start;
 		padding: 60px 124px 75px 71px;
 		#top {
-			width: 420px;
+			width: 446px;
 			height: 45px;
-			background-image: url('@/assets/images/logo.png');
-			background-size: contain;
+			background-size: 100% 100%;
 			background-repeat: no-repeat;
 		}
 		#middle {
@@ -25,11 +52,9 @@
 			justify-content: space-between;
 			align-items: center;
 			#left {
-				width: 1255px;
-				height: 474px;
-				background-image: url('@/assets/images/info/logo.png');
 				background-size: contain;
 				background-repeat: no-repeat;
+				align-self: flex-end;
 			}
 			#right {
 				width: 366px;
@@ -47,7 +72,6 @@
 			#left {
 				width: 1101px;
 				height: 92px;
-				background: linear-gradient(90deg, #103329 0%, #103326 100%);
 				opacity: 0.91;
 				border-radius: 10px;
 				padding: 25px 26px 23px 26px;
@@ -66,7 +90,6 @@
 				:deep(.el-button){
 					width: 100%;
 					height: 100%;
-					background-image: linear-gradient(90deg, #109967 0%, #16DD9E 100%);
 					border-radius: 6px;
 					border: none;
 					#enterTitle {

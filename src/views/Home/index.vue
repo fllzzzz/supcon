@@ -1,15 +1,57 @@
 <style lang="scss" scoped>
+	@use '@/assets/styles/theme' as T;
+
 	#homeView {
+		@include T.themeify {
+			background-image: url('@/assets/images/#{T.get(id)}/home/background.png');
+
+			:deep(.el-container){
+				.el-header {
+					#col1 {
+						background-image: url('@/assets/images/#{T.get(id)}/logo.png');
+					}
+
+					#col2 {
+						#right {
+							.el-switch {
+								.el-switch__core {
+									--el-switch-on-color: #{T.get(home-header-switch-on-color)};
+								}
+							}
+						}
+					}
+				}
+
+				.el-aside {
+					background-image: url('@/assets/images/#{T.get(id)}/home/aside/background.png');
+				
+					.el-menu-item {
+						&.is-active {
+							background: T.get(home-aside-item-active-bg-color);
+							&::after {
+								background: T.get(home-aside-item-active-after-color);
+							}
+							&::before {
+								background: T.get(home-aside-item-active-befor-color);
+							}
+						}
+						&:hover {
+							background: T.get(home-aside-item-hover-bg-color);
+						}
+					}
+				}
+			}
+		}
+		
 		width: 100vw;
 		height: 100vh;
-		background-image: url('@/assets/images/home/background.png');
 		background-size: 100% 100%;
 		background-repeat: no-repeat;
 		:deep(.el-container){
 			.el-header {
 				width: 1920px;
 				height: 110px;
-				background-image: url('@/assets/images/home/header/background.png');
+				background-image: url('@/assets/images/green/home/header/background.png');
 				background-size: 100% 100%;
 				background-repeat: no-repeat;
 				padding: 0 20px 0 30px;
@@ -20,7 +62,6 @@
 				#col1 {
 					width: 449px;
 					height: 49px;
-					background-image: url('@/assets/images/home/header/logo.png');
 					background-size: contain;
 					background-repeat: no-repeat;
 				}
@@ -50,7 +91,6 @@
 							.el-switch__core {
 								width: 100%;
 								height: 100%;
-								--el-switch-on-color: #05E8A0;
 								box-shadow: 0px 0px 18px 0px rgba(0,15,36,0.8);
 								border-radius: 16px;
 								.el-switch__action {
@@ -100,7 +140,6 @@
 			}
 			.el-aside {
 				width: 264px;
-				background-image: url('@/assets/images/home/aside/background.png');
 				background-size: 100% 100%;
 				background-repeat: no-repeat;
 				border: none;
@@ -124,32 +163,26 @@
 							font-weight: 400;
 							color: #EEEEEE;
 						}
-					}
-					.is-active {
-						background: linear-gradient(90deg, #109967 0%, #1FCF97 100%);
-						::after {
-							content: '';
-							display: block;
-							position: absolute;
-							bottom: 0;
-							right: 0;
-							width: 7px;
-							height: 45px;
-							background: linear-gradient(0deg, #1EE9A8 0%, #109968 100%);
+						&.is-active {
+							&::after {
+								content: '';
+								display: block;
+								position: absolute;
+								bottom: 0;
+								right: 0;
+								width: 7px;
+								height: 45px;
+							}
+							&::before {
+								content: '';
+								display: block;
+								position: absolute;
+								bottom: 0;
+								right: 10px;
+								width: 7px;
+								height: 22px;
+							}
 						}
-						::before {
-							content: '';
-							display: block;
-							position: absolute;
-							bottom: 0;
-							right: 10px;
-							width: 7px;
-							height: 22px;
-							background: linear-gradient(0deg, #1EE9A8 0%, #109968 100%);
-						}
-					}
-					:hover {
-						background: linear-gradient(90deg, #109967 0%, #1FCF97 100%);
 					}
 				}
 			}
@@ -170,20 +203,20 @@
 						<span class="title">设备总控</span>
 					</div>
 					<div class="box" id="right">
-						<el-switch v-model="globalReactive.deviceContor" @change="deviceControHandler"></el-switch>
+						<el-switch v-model="deviceControState" @change="deviceController"></el-switch>
 					</div>
 				</div>
 				<div class="col" id="col3">
 					<div class="box" id="box1">
-						<img src="@/assets/images/home/header/connectState.png">
+						<img src="@/assets/images/connectState.png">
 						<span class="title">已连接</span>
 					</div>
 					<div class="box" id="box2">
-						<img src="@/assets/images/home/header/logger.png">
+						<img src="@/assets/images/logger.png">
 						<span class="title">日志</span>
 					</div>
 					<div class="box" id="box3">
-						<img src="@/assets/images/home/header/exit.png">
+						<img src="@/assets/images/exit.png">
 						<span class="title">退出</span>
 					</div>
 				</div>
@@ -191,16 +224,16 @@
 			<el-container>
 				<el-aside>
 					<el-menu>
-						<template v-for="index in globalReactive.deviceInfos?.length" :key="index">
+						<template v-for="(item, index) in config?.asideOptions" 
+							:key="index"
+						>
 							<el-menu-item 
-								:index="index.toString()"
-								@click="menuItemClickHandler" 
-								:route="{
-									name: 'login'
-								}" >
-								<img src="@/assets/images/home/header/icon1.png">
+								:index="index"
+								:route="item.route"
+							>
+								<img src="@/assets/images/icon1.png">
 								<span class="title">
-									{{ globalReactive.jxValue1![ index - 1].Name }}
+									{{ item.name }}
 								</span>
 							</el-menu-item>
 						</template>
@@ -220,72 +253,117 @@
 </template>
 
 <script setup lang="ts">
-	import {
-		DeviceInfoType
-	} from '@/types';
+	import type {
+		PropType
+	} from 'vue';
+
+	import type {
+		RouteLocationRaw,
+		RouteParams,
+	} from 'vue-router';
+
+	import _window from '@/store/window';
 
 	import {
-		DeviceInfo
-	} from '@/assets/data/result';
+		ref,
+		onMounted
+	} from 'vue';
 
-	import {
-		HttpKey
-	} from '@/symbols';
+	type AsideOptions = {
+		name :string;
+		route :RouteLocationRaw & {params? :RouteParams};
+	};
 
-	import { ref,inject } from 'vue';
-	import { useRouter } from 'vue-router';
+	type Config = {
+		asideOptions? :AsideOptions[];
+	};
 
-	const $http = inject(HttpKey);
-	const router = useRouter();
+	const deviceControState = ref(false);
+	const config = ref<Config | undefined>();
+	const itemListMap = new Map<string, AsideOptions[]>([
+		['green', [
+			{
+				name: '何为森',
+				route: {
+					
+				},
+			},
+			{
+				name: '森林奥秘',
+				route: {},
+			},
+			{
+				name: '研究之道',
+				route: {},
+			},
+			{
+				name: '植物多样性',
+				route: {},
+			},
+			{
+				name: '12种代表性植物',
+				route: {},
+			},
+			{
+				name: '林下经济',
+				route: {},
+			},
+			{
+				name: '林与城可视化',
+				route: {},
+			},
+			{
+				name: '林与城',
+				route: {},
+			}	
+		]],
+		['yellow', [
+			{
+				name: '午潮传说',
+				route: {},
+			},
+			{
+				name: '午潮惨案',
+				route: {},
+			},
+			{
+				name: '数字午潮',
+				route: {},
+			},
+			{
+				name: '午潮旅游',
+				route: {},
+			}
+		]],
+	]);
 
-	const globalReactive = ref({
-		deviceContor: ref<boolean>(true),
-		deviceInfos: ref<DeviceInfoType[]>(),
-		jxValue1: ref<any[]>()
-	});
+	const deviceController = (value :unknown) => {/*  */}
 
-	Promise.resolve(DeviceInfo).then((result) => {
-		globalReactive.value.deviceInfos = result.data.list;
-	});
-	
-	const menuItemClickHandler = (evt :any) => {
-		const u = parseInt(evt.index)
-		const path = globalReactive.value.jxValue1![ u - 1 ].Name;
-		router.push({
-			path: `/home/WhatIsForest/${path}`
+	const configCreater = (
+		theme :string,
+	) :Config | undefined => {
+		const config :Config = {};
+
+		const target = itemListMap.get(theme)
+		if(! target) return undefined;
+
+		config.asideOptions = target.map(item => {
+			Object.assign(item.route,_window._config?.itemOptions.find(
+				opt => opt.name === item.name ? true : false
+			)?.metadata);
+
+			return item;
 		});
+
+		return config;
 	};
 
-	const getBootState = async () => {
-		return await $http?.get('http://192.168.1.236:19010/',{
-			Act: 'GetStatus' 
-		});
-	};
 
-	getBootState().then((result) => {
-		globalReactive.value.jxValue1! = result?.data.Data;
+	onMounted(() => {
+		const theme = document.documentElement.getAttribute('data-theme');
+
+		if(! theme) throw new Error('@home => data-theme is undefined');
+
+		config.value = configCreater(theme);
 	});
-
-	const deviceControHandler = (val :any) => {
-		if(val){
-			setRemoteBootState('boot');
-		}else {
-			setRemoteBootState('poweroff');
-		}
-	}
-
-	const setRemoteBootState = async (state :string) => {
-		switch(state) {
-			case 'boot':
-				return await $http?.get('http://192.168.1.236:19010/',{
-					Act: 'BootPC',
-					PCName: 'ALL'
-				});
-			case 'poweroff':
-				return await $http?.get('http://192.168.1.236:19010/',{
-					Act: 'ShutDownPC',
-					PCName: 'ALL'
-				});
-		}
-	};
 </script>

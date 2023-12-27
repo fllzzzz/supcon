@@ -15,7 +15,7 @@ export default [
 			KeepAlive: false,
 		}
 	},
-/* 	{
+	{
 		path: '/info',
 		name: 'info',
 		component: () => import('@/views/Info/index.vue'),
@@ -30,7 +30,7 @@ export default [
 		meta: {
 			KeepAlive: false,
 		},
-		children: [
+/* 		children: [
 			{
 				path: 'WhatIsForest/:name',
 				name: 'WahtIsForest',
@@ -63,6 +63,6 @@ export default [
 					KeepAlive: false,
 				},
 			}
-		]
-	}, */
+		] */
+	},
 ];
