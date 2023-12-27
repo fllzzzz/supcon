@@ -1,0 +1,23 @@
+@use 'sass:map';
+
+$_source-map: (
+	green: (
+		id: 'green'
+	),
+	yellow: (
+		id: 'yellow'
+	)
+);
+
+@mixin themeify {
+	@each $key, $value in $_source-map {
+		$_target-map: $value !global;
+		html[data-theme = #{$key}] & {
+			@content
+		}
+	}
+};
+
+@function get($var) {
+	@return map.get($_target-map, $var);
+};
