@@ -1,5 +1,11 @@
 <style lang="scss" scoped>
+	@use '@/assets/styles/theme' as T;
+
 	.app-card {
+		@include T.themeify {
+			background-image: url('@/assets/images/#{T.get(id)}/card-background.png');
+		}
+
 		box-sizing: border-box;
 		display: flex;
 		width: 100%;
@@ -7,7 +13,6 @@
 		box-sizing: border-box;
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
-		background-image: url('@/assets/images/green/home/content/box-background.png');
 
 		&__wrapper {
 			width: 100%;
@@ -31,7 +36,6 @@
 			flex-flow: row wrap;
 			justify-content: flex-start;
 			align-items: flex-start;
-			border: 2px dotted red;
 		}
 	}
 </style>

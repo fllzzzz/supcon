@@ -1,5 +1,13 @@
-<style lang="scss" scoped>
+<style lang="scss">
+	span {
+		line-height: 1;
+		user-select: none;
+	}
 
+	img {
+		user-select: none;
+		-webkit-user-drag: none;
+	}
 </style>
 
 <template>
@@ -12,13 +20,17 @@
 </template>
 
 <script setup lang="ts">
+	import theme from '@/store/theme';
+	import _window from '@/store/window';
+
 	import {
 		onMounted
 	} from 'vue';
 
-	onMounted(() => {
-		const elRoot = document.documentElement;
+	const _theme = _window._config?.theme ? _window._config.theme : 'green';
 
-		elRoot.setAttribute('data-theme', 'green');
+	onMounted(() => {
+		document.documentElement.setAttribute('data-theme' ,_theme);
+		theme.value = _theme;
 	});
 </script>

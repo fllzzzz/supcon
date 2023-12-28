@@ -1,5 +1,22 @@
 <style lang="scss" scoped>
+	@use '@/assets/styles/theme' as T;
+
 	.card-device-controller {
+		@include T.themeify {
+			&__wrapper {
+				.block {
+					.col.button {
+						background: T.get(card-device-contro-btn-bg-color);
+						border: 1px solid #{T.get(card-device-contro-btn-border-color)};
+						box-shadow: 0px 0px 18px 0px #{T.get(card-device-contro-btn-box-shadow-color)};
+						span {
+							text-shadow: 0px 0px 4px #{T.get(card-device-contro-btn-text-shadow-color)};
+						}
+					}
+				}
+			}
+		}
+
 		width: 1640px;
 		span {
 			line-height: 1;
@@ -58,21 +75,18 @@
 					&.button {
 						width: 65px;
 						height: 32px;
-						background: rgba(0,188,124,0.2);
-						border: 1px solid #05E49E;
-						box-shadow: 0px 0px 18px 0px rgba(0,15,36,0.52);
 						border-radius: 16px;
 						margin-right: 16px;
 						&:last-child {
 							margin-right: unset;
 						}
 						span {
+							pointer-events: none;
 							height: 15px;
 							font-size: 18px;
 							font-family: Source Han Sans CN;
 							font-weight: 400;
 							color: #FFFFFF;
-							text-shadow: 0px 0px 4px rgba(36,91,72,0.9);
 						}
 					}
 				}
@@ -86,11 +100,11 @@
 		<div class="card-device-controller__wrapper">
 			<Appcard>
 				<template #title>
-					<img src="@/assets/images/green/home/content/deviceContor.png">
+					<img :src=getTitleImage>
 				</template>
 				<template #main>
 					<template
-						v-for="(item, index) in props.config.deviceInfo"
+						v-for="(item, index) in props.config?.deviceInfo"
 						:key="index"
 					>
 						<div class="block">
@@ -103,14 +117,19 @@
 							>
 								<span>{{ deviceStateMap.get(item.state)![0] }}</span>
 							</div>
-							<div class="col button">
+							<div class="col button"
+								@click="poweronHandler(item.name)"
+							>
 								<span>ON</span>
 							</div>
-							<div class="col button">
+							<div class="col button"
+								@click="poweroffHandler(item.name)"
+							>
 								<span>OFF</span>
 							</div>
 							<div class="col button"
 								v-if="! item.disableRebootButton"
+								@clicl="rebootHandler(item.name)"
 							>
 								<span>重启</span>
 							</div>
@@ -123,11 +142,16 @@
 </template>
 
 <script setup lang="ts">
-	import Appcard from './Appcard.vue';
+	import type {
+		Message
+	} from '@/types';
 
 	import type {
 		PropType
 	} from 'vue';
+
+	import theme from '@/store/theme';
+	import Appcard from './Appcard.vue';
 
 	import {	
 		reactive,
@@ -142,23 +166,28 @@
 	};
 
 	export type Config = {
-		deviceInfo :DeviceInfo[];
+		ctx :Message;
+		/* deviceInfo? :Omit<DeviceInfo, 'state'>[]; */
+		deviceInfo :DeviceInfo[]
 	};
 
 	const props = defineProps({
 		config: {
 			type: Object as PropType<Config>,
-			default: () :Config => ({
-				deviceInfo: [
-					{
-						name: '主机',
-						state: 0,
-						disableState: false,
-						disableRebootButton: false
-					}
-				]
-			})
 		}
+	});
+
+	const config = reactive<DeviceInfo[]>([]);
+
+	const deviceStateMap = new Map<number, string[]>([
+		[0, ['离线', 'is-offline']],
+		[1, ['在线', 'is-online']]
+	]);
+
+	const getTitleImage = computed(() => {
+		return require<string>(
+			`@/assets/images/${theme.value}/设备控制.png`
+		);
 	});
 
 	const setDeviceStateClass = computed(() => (
@@ -170,8 +199,7 @@
 		return targetList[1];
 	});
 
-	const deviceStateMap = new Map<number, string[]>([
-		[0, ['离线', 'is-offline']],
-		[1, ['在线', 'is-online']]
-	]);
+	const poweronHandler = (name :string) => {/*  */};
+	const poweroffHandler = (name :string) => {/*  */};
+	const rebootHandler= (name :string) => {/*  */};
 </script>

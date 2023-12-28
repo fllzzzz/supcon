@@ -1,3 +1,8 @@
+export type Message = {
+	name :string;
+	host :string;
+};
+
 type MetaData = {
 	host :string;
 };
@@ -9,6 +14,7 @@ type ItemOptions = {
 
 export type AppOptions = {
 	theme :'green' | 'yellow';
+	baseHost :ItemOptions['metadata']['host'];
 	itemOptions :ItemOptions[];
 }; 
 

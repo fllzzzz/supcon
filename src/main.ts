@@ -10,7 +10,6 @@ import http from '@/http';
 
 const app = createApp(App)
 
-app.config.errorHandler = errorHandler;
 app.provide(HttpKey,http);
 
 app.use(store)

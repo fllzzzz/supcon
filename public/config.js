@@ -9,7 +9,8 @@ const config = {
 
 			
 	*/
-	theme: '',
+	theme: 'yellow',
+	baseHost: '127.0.0.1:999',  //ip:port
 	/* 
 		各子项的配置, name为子项名称, metadata为各子项的数据, host格式为ip:port 
 			type: 
@@ -45,10 +46,10 @@ const config = {
 	*/
 	itemOptions: [
 		{
-			name: '午潮传说',
+/* 			name: '午潮传说',
 			metadata: {
 				host: '127.0.0.3:82'
-			}
+			} */
 		}
 	],
 };

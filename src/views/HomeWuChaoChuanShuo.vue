@@ -34,14 +34,14 @@
 		onMounted,
 	} from 'vue';
 
+	const message = ref<Message | undefined>();
+
 	const props = defineProps({
 		message: {
 			type: String,
 			required: false
 		}
 	});
-
-	const message = ref<Message | undefined>();
 
 	const deviceContorConfig :DeviceContor= {
 		ctx: message.value!,

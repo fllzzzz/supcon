@@ -1,5 +1,16 @@
 <style lang="scss" scoped>
+	@use '@/assets/styles/theme' as T;
+
 	.card-media-controller {
+		@include T.themeify {
+			&__wrapper {
+				.block {
+					background: T.get(card-media-contro-btn-bg-color);
+					border: 1px solid #{T.get(card-media-contro-btn-border-color)};
+				}
+			}
+		}
+
 		width: 1640px;
 		span {
 			line-height: 1;
@@ -15,14 +26,13 @@
 			.block {
 				width: 120px;
 				height: 34px;
-				background: rgba(0,188,124,0.2);
-				border: 1px solid #05E49E;
 				border-radius: 17px;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				margin-right: calc(var(--margin-r) * 1px);
 				margin-bottom: calc(var(--margin-b) * 1px);
+				box-sizing: border-box;
 				& > * {
 					pointer-events: none;
 				}
@@ -53,27 +63,27 @@
 				}"
 			>
 				<template #title>
-					<img src="@/assets/images/yellow/home/content/多媒体控制.png">
+					<img :src="getTitleImage">
 				</template>
 				<template #main>
 					<template
-						v-for="(item, index) in props.config.buttonOptions"
+						v-for="(item, index) in props.config?.buttonOptions"
 						:key="index"
 					>
 						<div class="block"
 							:tabindex="index"
 							:style="{
-								'--margin-r': item.marginRight,
-								'--margin-b': item.marginBottom,
+								'--margin-r': props.config?.marginRight,
+								'--margin-b':  props.config?.marginBottom,
 							}"
 							@click="blockClickHandler(index, $event)"
 						>
 							<template
-								v-if="item.content?.image"
+								v-if="item.image"
 							>
-								<img :src="item.content.image">
+								<img :src="item.image">
 							</template>
-							<span>{{ item.content?.text }}</span>
+							<span>{{ item.text }}</span>
 						</div>
 					</template>
 				</template>
@@ -83,11 +93,16 @@
 </template>
 
 <script setup lang="ts">
-	import Appcard from './Appcard.vue';
+	import type {
+		Message
+	} from '@/types';
 
 	import type {
 		PropType
 	} from 'vue';
+
+	import theme from '@/store/theme';
+	import Appcard from './Appcard.vue';
 
 	import {
 		ref,
@@ -96,67 +111,51 @@
 	} from 'vue';
 
 	type ButtonOptions = {
-		marginRight? :number;
-		marginBottom? :number;
-		activeColor? :string;
-		content? :{
-			image? :string;
-			text? :string;
-		};
+		image? :string;
+		text? :string;
 	};
 
 	export type Config = {
+		marginRight? :number;
+		marginBottom? :number;
+		activeColor? :string;
+		ctx :Message;
 		buttonOptions :ButtonOptions[];
 	};
 
 	const props = defineProps({
 		config: {
 			type: Object as PropType<Config>,
-			default: () :Config => ({
-				buttonOptions: [
-					{
-						marginRight: 72,
-						marginBottom: 30,
-						activeColor: 'red',
-						content: {
-							text: '播放',
-							image: require<string>('@/assets/images/yellow/播放.png')
-						}
-					},
-					{
-						marginRight: 72,
-						marginBottom: 30,
-						activeColor: 'red',
-						content: {
-							text: 'asdsd',
-							image: 'sad'
-						}
-					},
-				]
-			})
 		}
 	});
 
+	const getTitleImage = computed(() => {
+		return require<string>(
+			`@/assets/images/${theme.value}/多媒体控制.png`
+		);
+	});
+
 	const getCardMarginBottomDiff = computed(() => {
-		if(! props.config.buttonOptions || (
-			props.config.buttonOptions && props.config.buttonOptions.length === 0
-		)) return 0;
-		const value = (props.config.buttonOptions
-		.map(item => {
-			if(! item.marginBottom && item.marginBottom !== 0) return undefined;
-			return item.marginBottom;
-		}).filter(value => value ? true : false) as number[])
-		.sort((a, b) => a > b ? -1 : 1)[0];
+		if(
+			! props.config?.marginBottom &&
+			props.config?.marginBottom !== 0
+		) return 0;
 
-		console.log('jx', value);
+		return props.config.marginBottom;
+	});
 
-		return value ? value : 0;
-	})
+	const effectHandler = (
+		index :number
+	) => {
+		/*  */
+	};
 
 	const blockClickHandler = (index :number, event :MouseEvent) => {
-		if(props.config.buttonOptions[index].activeColor) {
-			(event.target as HTMLElement).style.backgroundColor = 
-				props.config.buttonOptions[index].activeColor!;
+		effectHandler(index);
+
+		if(props.config?.activeColor) {
+			(event.target as HTMLElement).style.background = 
+				props.config.activeColor!;
 			
 
 			document.querySelectorAll<HTMLElement>(`
@@ -166,7 +165,7 @@
 				if(el.tabIndex === (event.target as HTMLElement).tabIndex)
 					return;
 
-				el.style.backgroundColor = 'rgba(0,188,124,0.2)';
+				el.style.background = 'rgba(0,188,124,0.2)';
 			});
 		}
 	};

@@ -25,6 +25,16 @@ $_source-map: (
 		home-aside-item-active-after-color: linear-gradient(0deg, #1EE9A8 0%, #109968 100%),
 		home-aside-item-active-befor-color: linear-gradient(0deg, #1EE9A8 0%, #109968 100%),
 		home-aside-item-hover-bg-color: linear-gradient(90deg, #109967 0%, #1FCF97 100%),
+		home-header-bg-image-path: url('@/assets/images/green/home/header/background.png'),
+		home-header-button-bg-color: rgba(0,188,124,0.2),
+		home-header-button-border-color: #05E49E,
+		home-header-button-box-shadow-color: rgba(0,15,36,0.52),
+		card-device-contro-btn-bg-color: rgba(0,188,124,0.2),
+		card-device-contro-btn-border-color: #05E49E,
+		card-device-contro-btn-box-shadow-color: rgba(0,15,36,0.52),
+		card-device-contro-btn-text-shadow-color: rgba(36,91,72,0.9),
+		card-media-contro-btn-bg-color:rgba(0,188,124,0.2),
+		card-media-contro-btn-border-color: #05E49E,
 	),
 	yellow: (
 		id: 'yellow',
@@ -50,6 +60,16 @@ $_source-map: (
 		home-aside-item-active-after-color: linear-gradient(0deg, #F8D267 0%, #9E7F28 100%),
 		home-aside-item-active-befor-color: linear-gradient(0deg, #F8D267 0%, #9E7F28 100%),
 		home-aside-item-hover-bg-color: linear-gradient(90deg, #D0A630 0%, #FFD768 100%),
+		home-header-bg-image-path: none,
+		home-header-button-bg-color: rgba(162,130,0,0.2),
+		home-header-button-border-color: #D6B558,
+		home-header-button-box-shadow-color: rgba(0,15,36,0.52),
+		card-device-contro-btn-bg-color: rgba(162,130,0,0.2),
+		card-device-contro-btn-border-color: #D6B558,
+		card-device-contro-btn-box-shadow-color: rgba(0,15,36,0.52),
+		card-device-contro-btn-text-shadow-color: rgba(36,91,72,0.9),
+		card-media-contro-btn-bg-color:rgba(162,130,0,0.2),
+		card-media-contro-btn-border-color:#D6B558,
 	)
 );
 

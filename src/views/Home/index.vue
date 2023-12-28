@@ -7,16 +7,16 @@
 
 			:deep(.el-container){
 				.el-header {
+					background-image: T.get(home-header-bg-image-path);
 					#col1 {
 						background-image: url('@/assets/images/#{T.get(id)}/logo.png');
 					}
-
 					#col2 {
 						#right {
-							.el-switch {
-								.el-switch__core {
-									--el-switch-on-color: #{T.get(home-header-switch-on-color)};
-								}
+							.col {
+								background: T.get(home-header-button-bg-color);
+								border: 1px solid #{T.get(home-header-button-border-color)};
+								box-shadow: 0px 0px 18px 0px #{T.get(home-header-button-box-shadow-color)};
 							}
 						}
 					}
@@ -51,7 +51,6 @@
 			.el-header {
 				width: 1920px;
 				height: 110px;
-				background-image: url('@/assets/images/green/home/header/background.png');
 				background-size: 100% 100%;
 				background-repeat: no-repeat;
 				padding: 0 20px 0 30px;
@@ -66,7 +65,7 @@
 					background-repeat: no-repeat;
 				}
 				#col2 {
-					width: 175px;
+					width: 245px;
 					height: 32px;
 					line-height: 32px;
 					display: flex;
@@ -82,28 +81,36 @@
 						}
 					}
 					#right {
-						width: 65px;
+						width: 146px;
 						height: 32px;
-						line-height: 32px;
-						.el-switch {
-							width: 100%;
-							height: 100%;
-							.el-switch__core {
-								width: 100%;
-								height: 100%;
-								box-shadow: 0px 0px 18px 0px rgba(0,15,36,0.8);
-								border-radius: 16px;
-								.el-switch__action {
-									width: 26px;
-									height: 26px;
-									background: #FFFFFF;
-									box-shadow: 0px 0px 8px 0px rgba(0,58,58,0.66);
-									border-radius: 50%;
-								}
-							}
+						span {
+							line-height: 1;
 						}
-						.el-switch.is-checked .el-switch__core .el-switch__action{
-								left: calc(100% - 1.35vw);
+						display: flex;
+						flex-flow: row nowrap;
+						justify-content: space-between;
+						align-items: center;
+						pointer-events: none;
+						.col {
+							pointer-events: auto;
+							& > * {
+								pointer-events: none;
+							}
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							width: 65px;
+							height: 32px;
+							box-shadow: 0px 0px 18px 0px rgba(0,15,36,0.52);
+							border-radius: 16px;
+							span {
+								height: 18px;
+								font-size: 18px;
+								font-family: Source Han Sans CN;
+								font-weight: 400;
+								color: #FFFFFF;
+								text-shadow: 0px 0px 4px rgba(36,91,72,0.9);
+							}
 						}
 					}
 				}
@@ -204,8 +211,11 @@
 					<div class="box" id="left">
 						<span class="title">设备总控</span>
 					</div>
-					<div class="box" id="right">
-						<el-switch v-model="deviceControState" @change="deviceController"></el-switch>
+					<div class="box" id="right"
+						@click="deviceController"
+					>
+						<div class="col" tabindex="1"><span>NO</span></div>
+						<div class="col" tabindex="0"><span>OFF</span></div>
 					</div>
 				</div>
 				<div class="col" id="col3">
@@ -226,6 +236,7 @@
 			<el-container>
 				<el-aside>
 					<el-menu
+						:default-active="getCurrentMenuIndex"
 					>
 						<template v-for="(item, index) in config?.asideOptions" 
 							:key="index"
@@ -254,10 +265,6 @@
 
 <script setup lang="ts">
 	import type {
-		PropType
-	} from 'vue';
-
-	import type {
 		RouteLocationRaw,
 		RouteParams,
 	} from 'vue-router';
@@ -265,11 +272,17 @@
 	import _window from '@/store/window';
 
 	import {
-		useRouter
+		setDeviceState
+	} from '@/hooks/api';
+
+	import {
+		useRouter,
+		useRoute
 	} from 'vue-router';
 
 	import {
 		ref,
+		computed,
 		onMounted
 	} from 'vue';
 
@@ -285,9 +298,11 @@
 		asideOptions? :AsideOptions[];
 	};
 
+	let _selfHost :string;
 	const router = useRouter();
-	const deviceControState = ref(false);
+	const route = useRoute();
 	const config = ref<Config | undefined>();
+	const clickItemIndex = ref<number | undefined>();
 	const itemListMap = new Map<string, AsideOptions[]>([
 		['green', [
 			{
@@ -317,7 +332,7 @@
 			{
 				name: '12种代表性植物',
 				route: {
-					name: '#'
+					name: '12ZhongDaiBiaoZhiWu'
 				},
 			},
 			{
@@ -335,7 +350,7 @@
 			{
 				name: '林与城',
 				route: {
-					name: '#'
+					name: 'LinYuCheng'
 				},
 			}	
 		]],
@@ -343,13 +358,13 @@
 			{
 				name: '午潮传说',
 				route: {
-					name: '#'
+					name: 'WuChaoChuanShuo'
 				},
 			},
 			{
 				name: '午潮惨案',
 				route: {
-					name: '#'
+					name: 'WuChaoCanAn'
 				},
 			},
 			{
@@ -367,11 +382,51 @@
 		]],
 	]);
 
-	const deviceController = (value :unknown) => {/*  */}
+	const getCurrentMenuIndex = computed(() => {
+		const target = config.value?.asideOptions?.findIndex(
+			opt => opt.route.name === route.name ? true : false
+		);
+
+		if(target === -1) return clickItemIndex.value;
+
+		return target;
+	});
+
+	const deviceController = (event :MouseEvent) => {
+		if((event.target as HTMLElement).tabIndex === 0) {
+			setDeviceState(_selfHost, 'ShutDownPC');
+			return;
+		}
+
+		if((event.target as HTMLElement).tabIndex === 1) {
+			setDeviceState(_selfHost, 'BootPC');
+			return;
+		}
+	}
+
 	const menuItemClickHandler = (data :AsideOptions) => {
+		clickItemIndex.value = config.value?.asideOptions?.findIndex(
+			opt => opt.name === data.name
+		);
+
 		router.push({
-			name: data.route.name
+			path: routePathCreater(data)
 		});
+	};
+
+	const routePathCreater = (data :AsideOptions) => {
+		if (data.route.name === '#') return '/home';
+
+		if(
+			! data.route.params ||
+			(data.route.params && Object.keys(data.route.params).length === 0)
+		) return `/home/${data.route.name}`;
+
+		return `/home/${data.route.name}/${btoa(
+			encodeURIComponent(JSON.stringify({
+				name: data.name, ...data.route.params
+			}))
+		)}`;
 	};
 
 	const configCreater = (
@@ -383,9 +438,24 @@
 		if(! target) return undefined;
 
 		config.asideOptions = target.map(item => {
-			Object.assign(item.route,_window._config?.itemOptions.find(
+			const _u = _window._config?.itemOptions.find(
 				opt => opt.name === item.name ? true : false
-			)?.metadata);
+			)?.metadata;
+
+			const _v = _window._config?.baseHost;
+
+			if(
+				_u &&
+				Object.keys(_u).length > 0
+			) {
+				item.route.params = {
+					..._u
+				};
+			}else if(_v) {
+				item.route.params = {
+					host: _v
+				};
+			}
 
 			return item;
 		});
@@ -393,6 +463,19 @@
 		return config;
 	};
 
+	const getHostAddress = () => {
+		const _u = _window._config?.itemOptions.find(
+			opt => opt.name === 'home'
+		)?.metadata.host;
+
+		const _v = _window._config?.baseHost;
+
+		const resutl = _u ? _u : _v ?_v.length > 0 ? _v : undefined : undefined;
+
+		if(! resutl) throw new Error('@home => baseHost is undefined');
+		console.log('@home', resutl);
+		return resutl;
+	};
 
 	onMounted(() => {
 		const theme = document.documentElement.getAttribute('data-theme');
@@ -400,5 +483,13 @@
 		if(! theme) throw new Error('@home => data-theme is undefined');
 
 		config.value = configCreater(theme);
+
+		if(config.value?.asideOptions) {
+			router.replace({
+				path: routePathCreater(config.value.asideOptions[0])
+			})
+		}
+
+		_selfHost = getHostAddress();
 	});
 </script>
