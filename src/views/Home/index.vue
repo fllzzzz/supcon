@@ -187,7 +187,9 @@
 				}
 			}
 			.el-main {
-				padding: 17px 16px 0 16px;
+				display: flex;
+				overflow: hidden;
+				flex-flow: column nowrap;
 			}
 		}
 	}
@@ -223,13 +225,14 @@
 			</el-header>
 			<el-container>
 				<el-aside>
-					<el-menu>
+					<el-menu
+					>
 						<template v-for="(item, index) in config?.asideOptions" 
 							:key="index"
 						>
 							<el-menu-item 
 								:index="index"
-								:route="item.route"
+								@click="menuItemClickHandler(item)"
 							>
 								<img src="@/assets/images/icon1.png">
 								<span class="title">
@@ -240,11 +243,8 @@
 					</el-menu>
 				</el-aside>
 				<el-main>
-					<RouterView v-slot="{ Component, route }">
-						<keep-alive>
-							<component v-if="route.meta.KeepAlive && route.params.name" :is="Component"></component>
-						</keep-alive>
-						<component v-if="! route.meta.KeepAlive && route.params.name" :is="Component"></component>
+					<RouterView v-slot="{ Component }">
+						<component :is="Component"></component>
 					</RouterView>
 				</el-main>
 			</el-container>
@@ -265,19 +265,27 @@
 	import _window from '@/store/window';
 
 	import {
+		useRouter
+	} from 'vue-router';
+
+	import {
 		ref,
 		onMounted
 	} from 'vue';
 
 	type AsideOptions = {
 		name :string;
-		route :RouteLocationRaw & {params? :RouteParams};
+		route :RouteLocationRaw & {
+			name? :string;
+			params? :RouteParams;
+		};
 	};
 
 	type Config = {
 		asideOptions? :AsideOptions[];
 	};
 
+	const router = useRouter();
 	const deviceControState = ref(false);
 	const config = ref<Config | undefined>();
 	const itemListMap = new Map<string, AsideOptions[]>([
@@ -285,59 +293,86 @@
 			{
 				name: '何为森',
 				route: {
-					
+					name: 'HeWeiSen'
 				},
 			},
 			{
 				name: '森林奥秘',
-				route: {},
+				route: {
+					name: '#'
+				},
 			},
 			{
 				name: '研究之道',
-				route: {},
+				route: {
+					name: '#'
+				},
 			},
 			{
 				name: '植物多样性',
-				route: {},
+				route: {
+					name: 'ZhiWuDuoYangXing'
+				},
 			},
 			{
 				name: '12种代表性植物',
-				route: {},
+				route: {
+					name: '#'
+				},
 			},
 			{
 				name: '林下经济',
-				route: {},
+				route: {
+					name: '#'
+				},
 			},
 			{
 				name: '林与城可视化',
-				route: {},
+				route: {
+					name: '#'
+				},
 			},
 			{
 				name: '林与城',
-				route: {},
+				route: {
+					name: '#'
+				},
 			}	
 		]],
 		['yellow', [
 			{
 				name: '午潮传说',
-				route: {},
+				route: {
+					name: '#'
+				},
 			},
 			{
 				name: '午潮惨案',
-				route: {},
+				route: {
+					name: '#'
+				},
 			},
 			{
 				name: '数字午潮',
-				route: {},
+				route: {
+					name: '#'
+				},
 			},
 			{
 				name: '午潮旅游',
-				route: {},
+				route: {
+					name: '#'
+				},
 			}
 		]],
 	]);
 
 	const deviceController = (value :unknown) => {/*  */}
+	const menuItemClickHandler = (data :AsideOptions) => {
+		router.push({
+			name: data.route.name
+		});
+	};
 
 	const configCreater = (
 		theme :string,

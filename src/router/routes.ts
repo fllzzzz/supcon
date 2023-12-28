@@ -30,39 +30,17 @@ export default [
 		meta: {
 			KeepAlive: false,
 		},
-/* 		children: [
+		children: [
 			{
-				path: 'WhatIsForest/:name',
-				name: 'WahtIsForest',
-				component: () => import('@/components/WhatIsForest.vue'),
-				meta: {
-					KeepAlive: false,
-				},
+				path: 'HeWeiSen',
+				name: 'HeWeiSen',
+				component: () => import('@/views/HomeHeWeiSen.vue'),
 			},
 			{
-				path: 'plant-diversity/:name',
-				name: 'plantDiversity',
-				component: () => import('@/components/PlantDiversity.vue'),
-				meta: {
-					KeepAlive: false,
-				},
+				path: 'ZhiWuDuoYangXing',
+				name: 'ZhiWuDuoYangXing',
+				component: () => import('@/views/HomeZhiWuDuoYangXing.vue'),
 			},
-			{
-				path: 'plant-delegate/:name',
-				name: 'palntDelegate',
-				component: () => import('@/components/PlantDelegate.vue'),
-				meta: {
-					KeepAlive: false,
-				},
-			},
-			{
-				path: 'forset-and-city/:name',
-				name: 'palntAndCity',
-				component: () => import('@/components/ForsetAndCity.vue'),
-				meta: {
-					KeepAlive: false,
-				},
-			}
-		] */
+		]
 	},
 ];

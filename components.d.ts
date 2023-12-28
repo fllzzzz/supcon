@@ -7,6 +7,9 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    Appcard: typeof import('./src/components/Appcard.vue')['default']
+    CardDEviceController: typeof import('./src/components/CardDEviceController.vue')['default']
+    CardMediaController: typeof import('./src/components/CardMediaController.vue')['default']
     DeviceBox: typeof import('./src/components/Info/deviceBox.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -19,12 +22,8 @@ declare module 'vue' {
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
-    ForsetAndCity: typeof import('./src/components/ForsetAndCity.vue')['default']
     LoginBox: typeof import('./src/components/Login/loginBox.vue')['default']
-    PlantDelegate: typeof import('./src/components/PlantDelegate.vue')['default']
-    PlantDiversity: typeof import('./src/components/PlantDiversity.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    WhatIsForest: typeof import('./src/components/WhatIsForest.vue')['default']
   }
 }
