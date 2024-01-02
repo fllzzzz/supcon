@@ -9,8 +9,12 @@ const config = {
 
 			
 	*/
-	theme: 'yellow',
-	baseHost: '127.0.0.1:999',  //ip:port
+	theme: 'green',
+	baseHost: '192.168.1.236:19010',  //ip:port
+	specialtyController : {
+		screen: '',
+		transparentlyScreen: '',
+	},
 	/* 
 		各子项的配置, name为子项名称, metadata为各子项的数据, host格式为ip:port 
 			type: 
@@ -46,10 +50,34 @@ const config = {
 	*/
 	itemOptions: [
 		{
-/* 			name: '午潮传说',
+			name: '植物多样性保护',
 			metadata: {
-				host: '127.0.0.3:82'
-			} */
+				host: '192.168.1.95:19010'
+			}
+		},
+		{
+			name: '12种代表性植物',
+			metadata: {
+				host: '192.168.1.95:19010'
+			}
+		},
+		{
+			name: '林与城',
+			metadata: {
+				host: '192.168.1.95:19010'
+			}
+		},
+		{
+			name: '午潮传说',
+			metadata: {
+				host: '192.168.1.95:19010'
+			}
+		},
+		{
+			name: '数字午潮',
+			metadata: {
+				host: '192.168.1.95:19010'
+			}
 		}
 	],
 };

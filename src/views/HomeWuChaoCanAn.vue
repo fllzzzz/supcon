@@ -35,6 +35,8 @@
 
 	const message = ref<Message | undefined>();
 
+	message.value = viewTool.parseMessage(props.message);
+
 	const config :DeviceContor= {
 		ctx: message.value!,
 		deviceInfo: [
@@ -48,6 +50,6 @@
 	};
 
 	onMounted(() => {
-		message.value = viewTool.parseMessage(props.message);
+		/*  */
 	});
 </script>

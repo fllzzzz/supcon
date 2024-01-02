@@ -65,7 +65,6 @@
 					background-repeat: no-repeat;
 				}
 				#col2 {
-					width: 245px;
 					height: 32px;
 					line-height: 32px;
 					display: flex;
@@ -79,9 +78,9 @@
 							font-weight: 400;
 							color: #FFFFFF;
 						}
+						margin-right: 30px;
 					}
 					#right {
-						width: 146px;
 						height: 32px;
 						span {
 							line-height: 1;
@@ -99,13 +98,14 @@
 							display: flex;
 							justify-content: center;
 							align-items: center;
-							width: 65px;
-							height: 32px;
+							width: 72px;
+							height: 72px;
 							box-shadow: 0px 0px 18px 0px rgba(0,15,36,0.52);
 							border-radius: 16px;
+							margin-right: 60px;
 							span {
-								height: 18px;
-								font-size: 18px;
+								height: 22px;
+								font-size: 22px;
 								font-family: Source Han Sans CN;
 								font-weight: 400;
 								color: #FFFFFF;
@@ -115,34 +115,40 @@
 					}
 				}
 				#col3 {
-					width: 250px;
 					height: 18px;
 					display: flex;
 					flex-flow: row nowrap;
 					justify-content: space-between;
 					align-items: center;
 					.box {
+						margin-left: 50px;
 						height: 18px;
 						display: flex;
 						flex-flow: row nowrap;
 						justify-content: space-between;
 						align-items: center;
+						pointer-events: auto;
+						& > * {
+							pointer-events: none;
+						}
 						span {
-							font-size: 16px;
+							margin-left: 10px;
+							font-size: 22px;
 							font-family: Alibaba PuHuiTi;
 							font-weight: 400;
 							color: #EEEEEE;
+							line-height: 1;
 						}
 					}
-					#box1 {
-						width: 76px;
+/* 					#box1 {
+						width: 86px;
 					}
 					#box2 {
-						width: 62px;
+						width: 72px;
 					}
 					#box3 {
-						width: 62px;
-					}
+						width: 72px;
+					} */
 				}
 			}
 			.el-aside {
@@ -157,7 +163,7 @@
 					background-color: transparent;
 					.el-menu-item {
 						position: relative;
-						height: 70px;
+						height: 90px;
 						img {
 							width: 21px;
 							height: 19px;
@@ -214,11 +220,11 @@
 					<div class="box" id="right"
 						@click="deviceController"
 					>
-						<div class="col" tabindex="1"><span>NO</span></div>
+						<div class="col" tabindex="1"><span>ON</span></div>
 						<div class="col" tabindex="0"><span>OFF</span></div>
 					</div>
 				</div>
-				<div class="col" id="col3">
+				<div class="col" id="col3" @click="headerOptionsHandler">
 					<div class="box" id="box1">
 						<img src="@/assets/images/connectState.png">
 						<span class="title">已连接</span>
@@ -227,7 +233,7 @@
 						<img src="@/assets/images/logger.png">
 						<span class="title">日志</span>
 					</div>
-					<div class="box" id="box3">
+					<div class="box" id="box3" route="/">
 						<img src="@/assets/images/exit.png">
 						<span class="title">退出</span>
 					</div>
@@ -270,6 +276,7 @@
 	} from 'vue-router';
 
 	import _window from '@/store/window';
+	import boot from '@/store/home';
 
 	import {
 		setDeviceState
@@ -283,7 +290,8 @@
 	import {
 		ref,
 		computed,
-		onMounted
+		onMounted,
+		onUnmounted
 	} from 'vue';
 
 	type AsideOptions = {
@@ -314,17 +322,17 @@
 			{
 				name: '森林奥秘',
 				route: {
-					name: '#'
+					name: 'SenLinAoMi'
 				},
 			},
 			{
 				name: '研究之道',
 				route: {
-					name: '#'
+					name: 'YanJiuZhiDao'
 				},
 			},
 			{
-				name: '植物多样性',
+				name: '植物多样性保护',
 				route: {
 					name: 'ZhiWuDuoYangXing'
 				},
@@ -338,13 +346,13 @@
 			{
 				name: '林下经济',
 				route: {
-					name: '#'
+					name: 'LinXiaJingJi'
 				},
 			},
 			{
 				name: '林与城可视化',
 				route: {
-					name: '#'
+					name: 'LinYuChengKeShiHua'
 				},
 			},
 			{
@@ -370,27 +378,35 @@
 			{
 				name: '数字午潮',
 				route: {
-					name: '#'
+					name: 'ShuZiWuChao'
 				},
 			},
 			{
 				name: '午潮旅游',
 				route: {
-					name: '#'
+					name: 'WuChaoLuYou'
 				},
-			}
+			},
 		]],
 	]);
 
 	const getCurrentMenuIndex = computed(() => {
-		const target = config.value?.asideOptions?.findIndex(
+		if(! config.value?.asideOptions) return 0;
+
+		const target = config.value.asideOptions.findIndex(
 			opt => opt.route.name === route.name ? true : false
 		);
 
-		if(target === -1) return clickItemIndex.value;
+		if(target === -1) return clickItemIndex.value ? clickItemIndex.value : 0;
 
 		return target;
 	});
+
+	const headerOptionsHandler = (event :MouseEvent) => {
+		const path = (event.target as HTMLElement).getAttribute('route');
+
+		path && router.push({path});
+	};
 
 	const deviceController = (event :MouseEvent) => {
 		if((event.target as HTMLElement).tabIndex === 0) {
@@ -440,20 +456,19 @@
 		config.asideOptions = target.map(item => {
 			const _u = _window._config?.itemOptions.find(
 				opt => opt.name === item.name ? true : false
-			)?.metadata;
+			)?.metadata.host;
 
 			const _v = _window._config?.baseHost;
 
-			if(
-				_u &&
-				Object.keys(_u).length > 0
-			) {
+			if(_u) {
 				item.route.params = {
-					..._u
+					host: _u, ...item.route.params 
 				};
-			}else if(_v) {
+			}
+			
+			if(_v) {
 				item.route.params = {
-					host: _v
+					baseHost: _v, ...item.route.params 
 				};
 			}
 
@@ -473,7 +488,6 @@
 		const resutl = _u ? _u : _v ?_v.length > 0 ? _v : undefined : undefined;
 
 		if(! resutl) throw new Error('@home => baseHost is undefined');
-		console.log('@home', resutl);
 		return resutl;
 	};
 
@@ -484,7 +498,8 @@
 
 		config.value = configCreater(theme);
 
-		if(config.value?.asideOptions) {
+		if(config.value?.asideOptions && boot.value) {
+			boot.value = true;
 			router.replace({
 				path: routePathCreater(config.value.asideOptions[0])
 			})

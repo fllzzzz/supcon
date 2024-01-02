@@ -59,53 +59,48 @@
 
 	const mediaControConfig :MediaContro = {
 		ctx: message.value!,
-		marginBottom: 40,
 		marginRight: 45,
-		activeColor: 'linear-gradient(90deg, #109967 0%, #16DD9E 100%)',
+		usecolumn: true,
+		marginBottom: 40,
 		buttonOptions: [
 			{
-				text: '伯乐树',
-			},
-			{
-				text: '银缕梅',
-			},
-			{
-				text: '天目铁木',
-			},
-			{
-				text: '红豆杉',
-			},
-			{
-				text: '水杉',
-			},
-			{
-				text: '枫香树',
-			},
-			{
-				text: '乌桕',
-			},
-			{
-				text: '榉树',
-			},
-			{
-				text: '银杏',
-			},
-			{
-				text: '紫薇',
-			},
-			{
-				text: '樱花',
-			},
-			{
-				text: '杜鹃',
+				text: '正片',
 			},
 			{
 				text: '待机',
 			},
+			{
+				text: '播放',
+				image: require<string>('@/assets/images/yellow/播放.png'),
+			},
+			{
+				text: '暂停',
+				image: require<string>('@/assets/images/yellow/暂停.png'),
+			},
+			{
+				text: '静音',
+				image: require<string>('@/assets/images/yellow/静音.png'),
+			},
+			{
+				text: '有声',
+				image: require<string>('@/assets/images/yellow/有声.png'),
+			},
+			{
+				text: '加音',
+				image: require<string>('@/assets/images/yellow/加音.png'),
+			},
+			{
+				text: '减音',
+				image: require<string>('@/assets/images/yellow/减音.png'),
+			},
+			{
+				text: '重播',
+				image: require<string>('@/assets/images/yellow/重播.png'),
+			}
 		]
 	};
 
 	onMounted(() => {
-		console.log('@media', props.message);
+		/*  */
 	});
 </script>

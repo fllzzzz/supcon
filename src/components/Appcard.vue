@@ -25,7 +25,7 @@
 		&__wrapper__title {
 			width: 137px;
 			height: 22px;
-			margin-bottom: 50px;
+			margin-bottom: 80px;
 		}
 
 		&__wrapper__main {
@@ -33,9 +33,8 @@
 			margin-left: 33px;
 			margin-bottom: calc((45 - var(--margin-bottom-diff)) *1px);
 			display: flex;
-			flex-flow: row wrap;
-			justify-content: flex-start;
-			align-items: flex-start;
+			flex-direction: var(--felx-dir);
+			flex-wrap: wrap;
 		}
 	}
 </style>
@@ -48,6 +47,7 @@
 			</div>
 			<div class="app-card__wrapper__main"
 				:style="{
+					'--felx-dir': props.config.flexDir,
 					'--margin-bottom-diff': props.config?.wrapperMarginBottomDiff
 				}"
 			>
@@ -67,6 +67,7 @@
 	} from 'vue';
 
 	type Config = {
+		flexDir? :string;
 		wrapperMarginBottomDiff :number
 	};
 

@@ -32,15 +32,22 @@ export default [
 		},
 		children: [
 			{
-				path: '#',
-				name: '#',
-				component: () => import('@/views/AppEmpty.vue'),
-			},
-			{
 				path: 'HeWeiSen/:message?',
 				name: 'HeWeiSen',
 				props: true,
 				component: () => import('@/views/HomeHeWeiSen.vue'),
+			},
+			{
+				path: 'SenLinAoMi/:message?',
+				name: 'SenLinAoMi',
+				props: true,
+				component: () => import('@/views/HomeSenLinAoMi.vue'),
+			},
+			{
+				path: 'YanJiuZhiDao/:message?',
+				name: 'YanJiuZhiDao',
+				props: true,
+				component: () => import('@/views/HomeYanJiuZhiDao.vue'),
 			},
 			{
 				path: 'ZhiWuDuoYangXing/:message?',
@@ -53,6 +60,18 @@ export default [
 				name: '12ZhongDaiBiaoZhiWu',
 				props: true,
 				component: () => import('@/views/Home12ZhongDaiBiaoZhiWu.vue'),
+			},
+			{
+				path: 'LinXiaJingJi/:message?',
+				name: 'LinXiaJingJi',
+				props: true,
+				component: () => import('@/views/HomeLinXiaJingJi.vue'),
+			},
+			{
+				path: 'LinYuChengKeShiHua/:message?',
+				name: 'LinYuChengKeShiHua',
+				props: true,
+				component: () => import('@/views/HomeLinYuChengKeShiHua.vue'),
 			},
 			{
 				path: 'LinYuCheng/:message?',
@@ -71,6 +90,18 @@ export default [
 				name: 'WuChaoCanAn',
 				props: true,
 				component: () => import('@/views/HomeWuChaoCanAn.vue'),
+			},
+			{
+				path: 'ShuZiWuChao/:message?',
+				name: 'ShuZiWuChao',
+				props: true,
+				component: () => import('@/views/HomeShuZiWuChao.vue'),
+			},
+			{
+				path: 'WuChaoLuYou/:message?',
+				name: 'WuChaoLuYou',
+				props: true,
+				component: () => import('@/views/HomeWuChaoLuYou.vue'),
 			},
 		]
 	},

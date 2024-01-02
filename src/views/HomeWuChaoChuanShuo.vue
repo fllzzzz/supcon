@@ -34,14 +34,16 @@
 		onMounted,
 	} from 'vue';
 
-	const message = ref<Message | undefined>();
-
 	const props = defineProps({
 		message: {
 			type: String,
 			required: false
 		}
 	});
+
+	const message = ref<Message | undefined>();
+
+	message.value = viewTool.parseMessage(props.message);
 
 	const deviceContorConfig :DeviceContor= {
 		ctx: message.value!,
@@ -78,11 +80,15 @@
 			{
 				text: '减音',
 				image: require<string>('@/assets/images/yellow/减音.png'),
+			},
+			{
+				text: '重播',
+				image: require<string>('@/assets/images/yellow/重播.png'),
 			}
 		]
 	};
 
 	onMounted(() => {
-		message.value = viewTool.parseMessage(props.message);
+		/*  */
 	});
 </script>

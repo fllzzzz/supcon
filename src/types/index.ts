@@ -1,6 +1,13 @@
 export type Message = {
 	name :string;
 	host :string;
+	baseHost :string;
+	specialtyController :SpecialtyController;
+};
+
+type SpecialtyController = {
+	screen :string;
+	transparentlyScreen :string;
 };
 
 type MetaData = {

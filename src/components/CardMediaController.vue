@@ -21,11 +21,17 @@
 				width: 100%;
 				height: 100%;
 				object-fit: fill;
+				margin-top: 25px;
+			}
+
+			.row {
+				display: flex;
+				flex-flow: row wrap;
 			}
 
 			.block {
-				width: 120px;
-				height: 34px;
+				width: 125px;
+				height: 72px;
 				border-radius: 17px;
 				display: flex;
 				justify-content: center;
@@ -36,15 +42,16 @@
 				& > * {
 					pointer-events: none;
 				}
-				img {
-					width: 11px;
-					height: 13px;
+				& > img {
+					margin-top: unset;
+					width: 17px;
+					height: 18px;
 					object-fit: fill;
 					margin-right: 8px;
 				}
 				span {
-					height: 17px;
-					font-size: 18px;
+					height: 22px;
+					font-size: 22px;
 					font-family: Alibaba PuHuiTi;
 					font-weight: 400;
 					color: #FFFFFF;
@@ -59,6 +66,7 @@
 		<div class="card-media-controller__wrapper">
 			<Appcard
 				:config="{
+					flexDir: config?.usecolumn ? 'column' : 'row',
 					wrapperMarginBottomDiff: getCardMarginBottomDiff
 				}"
 			>
@@ -67,23 +75,75 @@
 				</template>
 				<template #main>
 					<template
-						v-for="(item, index) in props.config?.buttonOptions"
-						:key="index"
+						v-if="! config?.usecolumn"
 					>
-						<div class="block"
-							:tabindex="index"
-							:style="{
-								'--margin-r': props.config?.marginRight,
-								'--margin-b':  props.config?.marginBottom,
-							}"
-							@click="blockClickHandler(index, $event)"
+						<template
+							v-for="(item, index) in config?.buttonOptions"
+							:key="index"
 						>
-							<template
-								v-if="item.image"
+							<div class="block"
+								:tabindex="index"
+								:style="{
+									'--margin-r': config?.marginRight,
+									'--margin-b':  config?.marginBottom,
+								}"
+								@click="blockClickHandler(index, $event)"
 							>
-								<img :src="item.image">
+								<template
+									v-if="item.image"
+								>
+									<img :src="item.image">
+								</template>
+								<span>{{ item.text }}</span>
+							</div>
+						</template>
+					</template>
+					<template
+						v-else
+					>
+						<div class="row">
+							<template
+								v-for="(item, index) in config?.buttonOptions.slice(0,2)"
+								:key="index"
+							>
+								<div class="block"
+									:tabindex="index"
+									:style="{
+										'--margin-r': config?.marginRight,
+										'--margin-b':  config?.marginBottom,
+									}"
+									@click="blockClickHandler(index, $event)"
+								>
+									<template
+										v-if="item.image"
+									>
+										<img :src="item.image">
+									</template>
+									<span>{{ item.text }}</span>
+								</div>
 							</template>
-							<span>{{ item.text }}</span>
+						</div>
+						<div class="row">
+							<template
+								v-for="(item, index) in config?.buttonOptions.slice(2)"
+								:key="index"
+							>
+								<div class="block"
+									:tabindex="index"
+									:style="{
+										'--margin-r': config?.marginRight,
+										'--margin-b':  config?.marginBottom,
+									}"
+									@click="blockClickHandler(index + 2, $event)"
+								>
+									<template
+										v-if="item.image"
+									>
+										<img :src="item.image">
+									</template>
+									<span>{{ item.text }}</span>
+								</div>
+							</template>
 						</div>
 					</template>
 				</template>
@@ -105,6 +165,10 @@
 	import Appcard from './Appcard.vue';
 
 	import {
+		mediaController
+	} from '@/hooks/api';
+
+	import {
 		ref,
 		computed,
 		reactive
@@ -119,6 +183,7 @@
 		marginRight? :number;
 		marginBottom? :number;
 		activeColor? :string;
+		usecolumn? :boolean;
 		ctx :Message;
 		buttonOptions :ButtonOptions[];
 	};
@@ -128,6 +193,8 @@
 			type: Object as PropType<Config>,
 		}
 	});
+
+	const config = computed(() => props.config);
 
 	const getTitleImage = computed(() => {
 		return require<string>(
@@ -145,13 +212,18 @@
 	});
 
 	const effectHandler = (
-		index :number
+		name? :string
 	) => {
-		/*  */
+		if(! name || ! config.value?.ctx.host) return undefined;
+
+		mediaController(
+			config.value.ctx.host,
+			name
+		);
 	};
 
 	const blockClickHandler = (index :number, event :MouseEvent) => {
-		effectHandler(index);
+		effectHandler(config.value?.buttonOptions[index].text);
 
 		if(props.config?.activeColor) {
 			(event.target as HTMLElement).style.background = 

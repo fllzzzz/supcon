@@ -43,34 +43,38 @@
 
 	const message = ref<Message | undefined>();
 
+	message.value = viewTool.parseMessage(props.message);
+
 	const deviceContorConfig :DeviceContor= {
 		ctx: message.value!,
 		deviceInfo: [
 			{
-				name: '主机',
+				name: '林与城大屏',
 				state: 0,
 				disableRebootButton: false,
 				disableState: false,
 			},
 			{
-				name: '大屏',
+				name: '林与城小屏',
 				state: 0,
-				disableRebootButton: true,
-				disableState: true,
-			},
-			{
-				name: '投屏屏',
-				state: 0,
-				disableRebootButton: true,
-				disableState: true,
+				disableRebootButton: false,
+				disableState: false,
 			}
 		]
 	};
 
 	const mediaControConfig :MediaContro = {
 		ctx: message.value!,
-		marginRight: 62,
+		marginRight: 45,
+		usecolumn: true,
+		marginBottom: 40,
 		buttonOptions: [
+			{
+				text: '正片',
+			},
+			{
+				text: '待机',
+			},
 			{
 				text: '播放',
 				image: require<string>('@/assets/images/yellow/播放.png'),
@@ -84,17 +88,25 @@
 				image: require<string>('@/assets/images/yellow/静音.png'),
 			},
 			{
+				text: '有声',
+				image: require<string>('@/assets/images/yellow/有声.png'),
+			},
+			{
 				text: '加音',
 				image: require<string>('@/assets/images/yellow/加音.png'),
 			},
 			{
 				text: '减音',
 				image: require<string>('@/assets/images/yellow/减音.png'),
-			}
+			},
+			{
+				text: '重播',
+				image: require<string>('@/assets/images/yellow/重播.png'),
+			},
 		]
 	};
 
 	onMounted(() => {
-		message.value = viewTool.parseMessage(props.message);
+		/*  */
 	});
 </script>

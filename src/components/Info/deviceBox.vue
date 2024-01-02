@@ -51,7 +51,7 @@
 
 		&__wrapper__main {
 			width: 100%;
-			height: 161px;
+			height: 131px;
 			display: flex;
 			flex-flow: column nowrap;
 			justify-content: flex-start;
@@ -60,7 +60,7 @@
 				&:nth-child(1) {
 					width: 100%;
 					height: 24px;
-					margin-bottom: 32px;
+					margin-bottom: 12px;
 					display: flex;
 					flex-flow: row nowrap;
 					justify-content: flex-start;
@@ -84,7 +84,7 @@
 					}
 				}
 				@for $i from 2 through 4 {
-					margin-bottom: 25px;
+					margin-bottom: 15px;
 					&:nth-child(#{$i}) {
 						height: 19px;
 						display: flex;
@@ -130,7 +130,7 @@
 		}
 
 		&__wrapper__split-line {
-			margin: 45px 0 45px 47px;
+			margin: 60px 0 30px 47px;
 			width: 265px;
 			height: 1px;
 			border: 1px solid;
@@ -153,6 +153,9 @@
 				}
 				.col {
 					height: 100%;
+					display: flex;
+					flex-flow: row nowrap;
+					align-items: center;
 					&:nth-child(1) {
 						margin-right: 28px;
 						width: 163px;

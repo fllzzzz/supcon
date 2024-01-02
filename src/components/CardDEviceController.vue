@@ -54,13 +54,13 @@
 						}
 					}
 					&.state {
-						width: 31px;
-						height: 18px;
+						width: 40px;
+						height: 24px;
 						border-radius: 5px;
-						margin-right: 15px;
+						margin-right: 60px;
 						span {
 							height: 11px;
-							font-size: 12px;
+							font-size: 16px;
 							font-family: Alibaba PuHuiTi;
 							font-weight: 400;
 							color: #FFFFFF;
@@ -73,17 +73,18 @@
 						}
 					}
 					&.button {
-						width: 65px;
-						height: 32px;
+						width: 72px;
+						height: 72px;
 						border-radius: 16px;
-						margin-right: 16px;
+						margin-right: 60px;
+						pointer-events: auto;
 						&:last-child {
 							margin-right: unset;
 						}
 						span {
 							pointer-events: none;
-							height: 15px;
-							font-size: 18px;
+							height: 22px;
+							font-size: 22px;
 							font-family: Source Han Sans CN;
 							font-weight: 400;
 							color: #FFFFFF;
@@ -104,10 +105,10 @@
 				</template>
 				<template #main>
 					<template
-						v-for="(item, index) in props.config?.deviceInfo"
+						v-for="(item, index) in config?.deviceInfo"
 						:key="index"
 					>
-						<div class="block">
+						<div class="block"  v-if="isShow">
 							<div class="col name">
 								<span>{{ item.name }}</span>
 							</div>
@@ -129,7 +130,7 @@
 							</div>
 							<div class="col button"
 								v-if="! item.disableRebootButton"
-								@clicl="rebootHandler(item.name)"
+								@click="rebootHandler(item.name)"
 							>
 								<span>重启</span>
 							</div>
@@ -153,9 +154,17 @@
 	import theme from '@/store/theme';
 	import Appcard from './Appcard.vue';
 
+	import {
+		getDeviceStateList,
+		setDeviceState
+	} from '@/hooks/api';
+
 	import {	
-		reactive,
-		computed
+		ref,
+		watchEffect,
+		computed,
+		onMounted,
+		onUnmounted
 	} from 'vue'
 
 	type DeviceInfo = {
@@ -177,7 +186,37 @@
 		}
 	});
 
-	const config = reactive<DeviceInfo[]>([]);
+	let loopGetStateTimer :number;
+	const config = ref<Config | undefined>();
+	const isShow = ref<boolean>(false);
+	const specialtyHandlerMap = new Map<string, ((
+		name :string,
+	) => void)>([
+		['大屏', name => {/*  */}],
+		['透明屏', name => {/*  */}],
+		['林与城大屏', name => {
+			config.value?.ctx.baseHost &&
+			setDeviceState(
+				config.value?.ctx.baseHost,
+				'BootPC',
+				name
+			).then(res => {
+				if(res.Code !== '0' && res.Code !== '-1') throw new Error('setDeviceState => BootPC');
+			});
+		}],
+		['林与城小屏', name => {
+			config.value?.ctx.baseHost &&
+			setDeviceState(
+				config.value?.ctx.baseHost,
+				'BootPC',
+				name
+			).then(res => {
+				if(res.Code !== '0' && res.Code !== '-1') throw new Error('setDeviceState => BootPC');
+			});
+		}],
+	]);
+
+	watchEffect(() => config.value = props.config);
 
 	const deviceStateMap = new Map<number, string[]>([
 		[0, ['离线', 'is-offline']],
@@ -199,7 +238,125 @@
 		return targetList[1];
 	});
 
-	const poweronHandler = (name :string) => {/*  */};
-	const poweroffHandler = (name :string) => {/*  */};
-	const rebootHandler= (name :string) => {/*  */};
+	const poweronHandler = (name :string) => {
+		const specialtyHandler = specialtyHandlerMap.get(name);
+
+		if(specialtyHandler) {
+			specialtyHandler(name);
+			return;
+		}
+
+		config.value?.ctx.baseHost &&
+		setDeviceState(
+			config.value?.ctx.baseHost,
+			'BootPC',
+			config.value.ctx.name
+		).then(res => {
+			if(res.Code !== '0' && res.Code !== '-1') throw new Error('setDeviceState => BootPC');
+		});
+	};
+	const poweroffHandler = (name :string) => {
+		const specialtyHandler = specialtyHandlerMap.get(name);
+
+		if(specialtyHandler) {
+			specialtyHandler(name);
+			return;
+		}
+			
+		config.value?.ctx.baseHost &&
+		setDeviceState(
+			config.value?.ctx.baseHost,
+			'ShutDownPC',
+			config.value.ctx.name
+		).then(res => {
+			if(res.Code !== '0' && res.Code !== '-1') throw new Error('setDeviceState => BootPC');
+		});
+	};
+	const rebootHandler= (name :string) => {
+		const specialtyHandler = specialtyHandlerMap.get(name);
+
+		if(specialtyHandler) {
+			specialtyHandler(name);
+			return;
+		}
+
+		config.value?.ctx.baseHost &&
+		setDeviceState(
+			config.value?.ctx.baseHost,
+			'RebootPC',
+			config.value.ctx.name
+		).then(res => {
+			if(res.Code !== '0' && res.Code !== '-1') throw new Error('setDeviceState => BootPC');
+		});
+	};
+
+	const getDevicestate = async (
+		host :string,
+	) => {
+		return getDeviceStateList(host)
+			.then(result => result.Data)
+			.then((
+				list :{
+					Name :string;
+					Status :string;
+				}[]
+			)=> {
+				let result :typeof list[0] | undefined;
+
+				if (
+					config.value?.ctx.name === '林与城'
+				) {
+					for(let i = 0; i < list.length; i++) {
+						if(
+							list[i].Name === '林与城小屏' ||
+							list[i].Name === '林与城大屏'
+						) {
+							result = list[i];
+							break;
+						}
+					}
+
+					return result;
+				}
+
+				for(let i = 0; i < list.length; i++) {
+					if(list[i].Name === config.value?.ctx.name) {
+						result = list[i];
+						break;
+					}
+				}
+
+				return result;
+			}).then(dev => {
+				if(! dev) return false;
+
+				config.value?.deviceInfo.filter(
+					dev => dev.disableState ? false : true
+				).forEach(_dev => {
+					_dev.state = dev.Status === '不在线' ? 0 : 1
+				});
+
+				return true;
+			})
+	};
+
+	config.value?.ctx.baseHost &&
+	getDevicestate(config.value?.ctx.baseHost).then(state => {
+		if (! state) throw new Error('not find device');
+
+		isShow.value = true;
+	});
+
+	onMounted(() => {
+		loopGetStateTimer = setInterval(() => {
+			config.value?.ctx.baseHost &&
+			getDevicestate(config.value?.ctx.baseHost).then(state => {
+				if (! state) throw new Error('not find device');
+			})
+		}, 5000)
+	});
+
+	onUnmounted(() => {
+		clearInterval(loopGetStateTimer)
+	});
 </script>

@@ -74,7 +74,7 @@
 				height: 92px;
 				opacity: 0.91;
 				border-radius: 10px;
-				padding: 25px 26px 23px 26px;
+				padding: 0 26px 0 26px;
 				box-sizing: border-box;
 				overflow: hidden;
 				#introTitle {
@@ -133,6 +133,12 @@
 
 	import { useRouter } from 'vue-router';
 
+	import boot from '@/store/home';
+
+	import {
+		onMounted
+	} from 'vue';
+
 	const router = useRouter();
 
 	const enterHandler = () => {
@@ -140,4 +146,8 @@
 			name: 'home'
 		});
 	};
+
+	onMounted(() => {
+		boot.value = false;
+	});
 </script>
